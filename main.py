@@ -1,7 +1,6 @@
 #!/usr/local/bin/python3
 import logging
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-from PocztaPolskaAPI import PocztaPolska
 from sys import argv as arg
 
 print("Hello world")
