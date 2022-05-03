@@ -40,6 +40,7 @@ self.package = {
 }
 """
 
+from email.utils import format_datetime
 import requests
 
 class TrackInpostParcel(object):
@@ -49,11 +50,11 @@ class TrackInpostParcel(object):
         
         self.package = requests.get("https://api-shipx-pl.easypack24.net/v1/tracking/%s" % trackingNumber).json()
     
-    def getTrackingDetails(self, index):
+    def get_tracking_details(self, index):
         entry = self.package['tracking_details'][index]
         info = {
-            'status': entry['status'],
-            'datetime': entry['datetime']
+            'date': entry['datetime'],
+            'status': entry['status']
         }
 
         return info
@@ -61,13 +62,44 @@ class TrackInpostParcel(object):
     def get_current_status(self):
         status = self.package['tracking_details'][0]['status']
 
+        return self.format_status(status)
+        
+    def get_tracking_history(self):
+        history = []
+
+        for i in range(0, len(self.package['tracking_details'])-1):
+            history.append(self.get_tracking_details(i))
+        
+        pretty_text = ""
+
+        for entry in history:
+            for item in entry:
+                pretty_text = pretty_text + item.capitalize() + ": " + self.format_item(entry[item]) + "\n"
+            
+            pretty_text += "\n"
+        
+        return pretty_text
+
+    def format_item(self, item):
+        if "T" in item:
+            return self.format_datetime(item)
+        else:
+            return self.format_status(item)
+
+    def format_status(self, status):
         if status == 'sent_from_source_branch':
             return 'Sent from source branch'
         else:
             return status
-    
-    def getTrackingHistory(self):
-        return self.package['tracking_details']
+
+    def format_datetime(self, datetime):
+        dt = datetime.split("T") # dt = ["2022-05-31", "21:37.000+2:00"]
+        dt[1] = dt[1].split(".")[0]
+
+        pretty_text = dt[1] + " " + dt[0]
+
+        return pretty_text
+
     
     def getLastUpdateTime(self):
         return self.package['updated_at']
