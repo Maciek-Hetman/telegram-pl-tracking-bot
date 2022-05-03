@@ -35,8 +35,5 @@ def main(BOT_KEY):
 
     updater.start_polling()
 
-    poczta = PocztaPolska()
-    print(poczta.CheckPackage("testp0"))
-
 if __name__ == '__main__':
-    main(arg[2])
+    main(arg[1])
