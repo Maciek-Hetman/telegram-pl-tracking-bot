@@ -43,6 +43,21 @@ def track(update, context):
     
     update.message.reply_text(info)
 
+def track_history(update, context):
+    if len(context.args) == 2:
+        tracking_number = context.args[0]
+        use_inpost_api = context.args[1].lower() == 'inpost'
+    elif len(context.args) < 2:
+        return update.message.reply_text('No tracking number/carrier provided.\nUse /track <tracking_number> <carrier>')        
+    else:
+        return update.message.reply_text('Too many arguments.')
+    
+    if use_inpost_api == True:
+        tracker = TrackInpostParcel(tracking_number)
+        info = tracker.get_tracking_history()
+    
+    update.message.reply_text(info)
+
 def main(BOT_KEY):
     updater = Updater(BOT_KEY, use_context=True)
     dp = updater.dispatcher
@@ -50,6 +65,7 @@ def main(BOT_KEY):
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("track", track))
+    dp.add_handler(CommandHandler("track_history", track_history))
     dp.add_error_handler(error)
 
     updater.start_polling()
