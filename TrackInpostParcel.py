@@ -50,9 +50,27 @@ class TrackInpostParcel(object):
         
         self.package = requests.get("https://api-shipx-pl.easypack24.net/v1/tracking/%s" % trackingNumber).json()
     
+    def getTrackingDetails(self, index):
+        entry = self.package['tracking_details'][index]
+        info = {
+            'status': entry['status'],
+            'datetime': entry['datetime']
+        }
+
+        return info
+
     def getStatus(self):
         return self.package['tracking_details'][0]['status']
     
+    def getTrackingHistory(self):
+        return self.package['tracking_details']
+    
+    def getLastUpdateTime(self):
+        return self.package['updated_at']
+
+    def getCreationTime(self):
+        return self.package['created_at']
+
     def getTrackingNumber(self):
         return self.package['tracking_number']
     
