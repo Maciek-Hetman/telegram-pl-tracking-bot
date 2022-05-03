@@ -5,7 +5,7 @@ Currently supported carriers:
     - Poczta Polska
     - idk maybe dhl, dpd and ups will work too, didn't test it yet
 
-# Usage
+## Usage
 Project is still in heavy development.  
 Currently available commands:  
 /track (tracking number) (carrier)  
