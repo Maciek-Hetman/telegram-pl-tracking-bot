@@ -22,10 +22,6 @@ def help(update, context):
 
     update.message.reply_text(text)
 
-# Echo user message
-def echo(update, context):
-    update.message.reply_text(update.message.text)
-
 # Log errors
 def error(update, context):
     logger.warning('Update %s caused error "%s"' % (update, context.error))
@@ -53,7 +49,6 @@ def main(BOT_KEY):
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("track", track))
-    dp.add_handler(MessageHandler(Filters.text, echo))
     dp.add_error_handler(error)
 
 
