@@ -41,7 +41,7 @@ def track(update, context):
         info = tracker.getStatus()
     else:
         tracker = TrackInpostParcel(tracking_number)
-        info = tracker.getStatus()
+        info = tracker.get_current_status()
     
     update.message.reply_text(info)
 

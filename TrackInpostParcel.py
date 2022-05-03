@@ -58,8 +58,13 @@ class TrackInpostParcel(object):
 
         return info
 
-    def getStatus(self):
-        return self.package['tracking_details'][0]['status']
+    def get_current_status(self):
+        status = self.package['tracking_details'][0]['status']
+
+        if status == 'sent_from_source_branch':
+            return 'Sent from source branch'
+        else:
+            return status
     
     def getTrackingHistory(self):
         return self.package['tracking_details']
