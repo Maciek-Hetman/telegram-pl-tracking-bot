@@ -86,10 +86,15 @@ class TrackInpostParcel(object):
             return self.format_status(item)
 
     def format_status(self, status):
-        if status == 'sent_from_source_branch':
-            return 'Sent from source branch'
-        else:
-            return status
+        text = status.split('_')
+        text[0] = text[0].capitalize()
+
+        pretty_text = ""
+
+        for word in text:
+            pretty_text = pretty_text + word + " "
+
+        return pretty_text
 
     def format_datetime(self, datetime):
         dt = datetime.split("T") # dt = ["2022-05-31", "21:37.000+2:00"]
