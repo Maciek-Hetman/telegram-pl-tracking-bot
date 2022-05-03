@@ -40,7 +40,6 @@ self.package = {
 }
 """
 
-from email.utils import format_datetime
 import requests
 
 class TrackInpostParcel(object):
