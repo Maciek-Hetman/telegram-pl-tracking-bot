@@ -86,5 +86,31 @@ class TrackParcelPP(object):
         self.client = Client('https://tt.poczta-polska.pl/Sledzenie/services/Sledzenie?wsdl', wsse=UsernameToken('sledzeniepp', 'PPSA'))
         self.parcel_info = self.client.service.sprawdzPrzesylke(str(tracking_number))
     
+    def get_tracking_details(self, index):
+        entry = self.parcel_info['danePrzesylki']['zdarzenia']['zdarzenie'][index]
+
+        info = {
+            'date': entry['czas'],
+            'status': entry['nazwa']
+        }
+
+        return info
+
     def get_current_status(self):
         return self.parcel_info['danePrzesylki']['zdarzenia']['zdarzenie'][0]['nazwa']
+    
+    def get_tracking_history(self):
+        history = []
+
+        for i in range(0, len(self.parcel_info['danePrzesylki']['zdarzenia']['zdarzenie'])-1):
+            history.append(self.get_tracking_details(i))
+        
+        pretty_text = ""
+
+        for entry in history:
+            for item in entry:
+                pretty_text = pretty_text + item.capitalize() + ": " + entry[item] + "\n"
+            
+            pretty_text += "\n"
+        
+        return pretty_text
