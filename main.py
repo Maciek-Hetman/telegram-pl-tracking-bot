@@ -16,7 +16,15 @@ def start(update, context):
 
 # Send message when /help command is issued
 def help(update, context):
-    text = "/start - welcome message\n/track - track package"
+    # Don't look at this
+    line1 = "/start - see welcome message"
+    line2 = "\n/help - see this message"
+    line3 = "\n/carriers - list supported carriers"
+    line4 = "\n/track <tracking number> <carrier> - see current parcel status"
+    line5 = "\n/track_history <tracking_number> <carrier> - see history of parcel"
+
+    # Nothing to see here
+    text = line1 + line2 + line3 + line4 + line5
 
     update.message.reply_text(text)
 
