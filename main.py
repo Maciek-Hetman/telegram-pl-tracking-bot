@@ -35,10 +35,18 @@ def track(update, context):
         return update.message.reply_text('Too many arguments.')
 
     if use_inpost_api == False:
-        tracker = TrackParcel(tracking_number)
+        try:
+            tracker = TrackParcel(tracking_number)
+        except:
+            return update.message.reply_text("Could not find parcel %s " % tracking_number)
+
         info = tracker.getStatus()
     else:
-        tracker = TrackInpostParcel(tracking_number)
+        try:
+            tracker = TrackInpostParcel(tracking_number)
+        except:
+            return update.message.reply_text("Could not find parcel %s" % tracking_number)
+        
         info = tracker.get_current_status()
     
     update.message.reply_text(info)

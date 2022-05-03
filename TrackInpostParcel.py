@@ -44,11 +44,13 @@ import requests
 
 class TrackInpostParcel(object):
     def __init__(self, trackingNumber):
-        if type(trackingNumber) != str:
-            trackingNumber = str(trackingNumber)
-        
         self.package = requests.get("https://api-shipx-pl.easypack24.net/v1/tracking/%s" % trackingNumber).json()
-    
+        
+        try:
+            self.package['tracking_details']
+        except KeyError:
+            raise ("Could not find package %s" % trackingNumber)
+
     def get_tracking_details(self, index):
         entry = self.package['tracking_details'][index]
         info = {
