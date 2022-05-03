@@ -100,17 +100,14 @@ class TrackInpostParcel(object):
         return pretty_text
 
     
-    def getLastUpdateTime(self):
-        return self.package['updated_at']
+    def get_last_updated_datetime(self):
+        return self.format_datetime(self.package['updated_at'])
 
-    def getCreationTime(self):
-        return self.package['created_at']
+    def get_creation_datetime(self):
+        return self.format_datetime(self.package['created_at'])
 
-    def getTrackingNumber(self):
-        return self.package['tracking_number']
+    def get_service_type(self): # This could be locker or courier
+        return self.package['service'].capitalize()
     
-    def getService(self): # This could be locker or courier
-        return self.package['service']
-    
-    def getTargetLocation(self):
+    def getTargetLocation(self): # That's for later
         return self.package['custom_attributes']['target_machine_detail']
