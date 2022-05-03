@@ -1,6 +1,4 @@
 import requests as req
-import sys
-from os import path
 
 class TrackParcel(object):
     API_BASE_URL = "https://api.ordertracker.com"
