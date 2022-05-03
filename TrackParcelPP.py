@@ -1,46 +1,90 @@
-import requests as req
+"""
+self.parcel_info = {
+    'danePrzesylki': {                                  # Parcel info
+        'dataNadania': <datetime.date object>           # Creation time
+        'format': <None, or idk>
+        'kodKrajuNadania': <string>                     # Origin country code
+        'kodKrajuPrzezn': <string>                      # Destination country code
+        'kodRodzPrzes': <string>                        # Parcel type code
+        'krajNadania': <string>                         # Origin country
+        'krajPrzezm': <string>                          # Destination country
+        'masa': <None or something>                     # Weight
+        'numer': <string>                               # Tracking number
+        'proceduraSerwis': {
+            'kod': <none or sth>
+            'kopertaFirmowa': <none or sth>
+            'nazwa': <none or sth>
+            'przesylkiPowiazane': <none or sth>
+        }
+        'rodzPrzes': <string>                           # Parcel type
+        'urzadNadania': {                               
+            'daneSzczegolowe': {
+                'dlGeogr': None,
+                'godzinyPracy': None,
+                'miejscowosc': None,
+                'nrDomu': None,
+                'nrLokalu': None,
+                'pna': None,
+                'szerGeogr': None,
+                'ulica': None
+            },
+            'nazwa': 'PP PP-Wrocław D101'
+        },
+        'urzadPrzezn': {
+            'daneSzczegolowe': {
+                'dlGeogr': None,
+                'godzinyPracy': None,
+                'miejscowosc': None,
+                'nrDomu': None,
+                'nrLokalu': None,
+                'pna': None,
+                'szerGeogr': None,
+                'ulica': None
+            },
+            'nazwa': 'UP Lublin 62'
+        },
+        'zakonczonoObsluge': True,                      # Is delivered?
+        'zdarzenia': {
+            'zdarzenie': [
+                {
+                    'czas': <string>,
+                    'jednostka': {
+                        'daneSzczegolowe': {
+                            'dlGeogr': None,
+                            'godzinyPracy': None,
+                            'miejscowosc': None,
+                            'nrDomu': None,
+                            'nrLokalu': None,
+                            'pna': None,
+                            'szerGeogr': None,
+                            'ulica': None
+                        },
+                        'nazwa': None
+                    },
+                    'kod': <string>,
+                    'konczace': <bool>,                 # Ending?
+                    'nazwa': <string>,                  # Description (IMPORTANT)
+                    'przyczyna': {
+                        'kod': None,
+                        'nazwa': None
+                    }
+                },
+                {another one}
+            ]
+        }
+        'numer': <string>                               # Tracking number
+        'status': <int>
+    }
+}
+"""
 
-class TrackParcel(object):
-    API_BASE_URL = "https://api.ordertracker.com"
-    API_REFERENCE_URL = "public/trackinglinks"
+from zeep import Client
+from zeep.wsse.username import UsernameToken
 
-    def __init__(self, trackingNumber):
-        self.link = self.getTrackingLink(trackingNumber)
-        self.data = self.getTrackingInfo(self.link)
-
-        if not self.data:
-            raise ("Cound not find tracking info for package %s" % trackingNumber)
-        
-        try:
-            self.number = self.data['number']
-            self.status = self.data['status']
-            self.steps = self.data['steps']
-            self.dit = self.data['daysInTransit']
-        except KeyError:
-            raise ("Error interpreting data for %s" % trackingNumber)
-        
-    def getTrackingLink(self, trackingNumber):
-        r = req.get(f"{self.API_BASE_URL}/{self.API_REFERENCE_URL}?trackingstring={trackingNumber}")
-
-        if not r.ok:
-            return False
-        
-        return r.json()[0]['link']
+class TrackParcelPP(object):
+    def __init__(self, tracking_number):
+        self.client = Client('https://tt.poczta-polska.pl/Sledzenie/services/Sledzenie?wsdl', wsse=UsernameToken('sledzeniepp', 'PPSA'))
+        self.parcel_info = self.client.service.sprawdzPrzesylke(str(tracking_number))
     
-    def getTrackingInfo(self, link):
-        r = req.get(link)
-
-        if not r.ok:
-            return False
-        
-        return r.json()
-    
-    def getStatus(self):
-        return self.status
-    
-    def getSteps(self):
-        return self.steps
-    
-    def getDit(self):
-        return self.dit
-    
+    def get_current_status(self):
+        return self.parcel_info['danePrzesylki']['zdarzenia']['zdarzenie'][0]['nazwa']

@@ -2,7 +2,7 @@
 import logging
 from telegram.ext import Updater, CommandHandler
 from TrackInpostParcel import TrackInpostParcel
-from TrackParcel import TrackParcel
+from TrackParcelPP import TrackParcelPP
 from sys import argv as arg
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -36,11 +36,11 @@ def track(update, context):
 
     if use_inpost_api == False:
         try:
-            tracker = TrackParcel(tracking_number)
+            tracker = TrackParcelPP(tracking_number)
         except:
             return update.message.reply_text("Could not find parcel %s " % tracking_number)
 
-        info = tracker.getStatus()
+        info = tracker.get_current_status()
     else:
         try:
             tracker = TrackInpostParcel(tracking_number)
