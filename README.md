@@ -11,4 +11,4 @@ Currently available commands:
 /track (tracking number) (carrier)  
 /help  
 /start  
-/track_history (tracking number) (carrier) - now only for inpost
+/track_history (tracking number) (carrier)
