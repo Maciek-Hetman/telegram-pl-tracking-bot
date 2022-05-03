@@ -43,13 +43,13 @@ self.package = {
 import requests
 
 class TrackInpostParcel(object):
-    def __init__(self, trackingNumber):
-        self.package = requests.get("https://api-shipx-pl.easypack24.net/v1/tracking/%s" % trackingNumber).json()
+    def __init__(self, tracking_number):
+        self.package = requests.get("https://api-shipx-pl.easypack24.net/v1/tracking/%s" % tracking_number).json()
         
         try:
             self.package['tracking_details']
         except KeyError:
-            raise ("Could not find package %s" % trackingNumber)
+            raise ("Could not find package %s" % tracking_number)
 
     def get_tracking_details(self, index):
         entry = self.package['tracking_details'][index]
@@ -69,7 +69,7 @@ class TrackInpostParcel(object):
         history = []
 
         for i in range(0, len(self.package['tracking_details'])-1):
-            history.append(self.get_tracking_details(i))
+            history.append(self.get_tracking_details(len(self.package['tracking_details']) - i - 1))
         
         pretty_text = ""
 
@@ -100,7 +100,7 @@ class TrackInpostParcel(object):
         dt = datetime.split("T")                # dt = ["2022-05-31", "21:37.000+2:00"]
         dt[1] = dt[1].split(".")[0]
 
-        pretty_text = dt[1] + " " + dt[0]
+        pretty_text = dt[0] + " " + dt[1]
 
         return pretty_text
     
@@ -110,8 +110,8 @@ class TrackInpostParcel(object):
     def get_creation_datetime(self):
         return self.format_datetime(self.package['created_at'])
 
-    def get_service_type(self): # This could be locker or courier
+    def get_service_type(self):                 # This could be locker or courier
         return self.package['service'].capitalize()
     
-    def getTargetLocation(self): # That's for later
+    def getTargetLocation(self):                # That's for later
         return self.package['custom_attributes']['target_machine_detail']
