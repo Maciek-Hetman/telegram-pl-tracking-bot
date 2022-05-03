@@ -28,6 +28,16 @@ def help(update, context):
 
     update.message.reply_text(text)
 
+def carriers(update, context):
+    line1 = "Currently supported carriers:"
+    line2 = "\n\t- Poczta Polska (you can short it to 'pp')"
+    line3 = "\n\t- InPost"
+    line4 = "\nYou don't have to capitalize letters (inpost will be recognized as InPost)"
+
+    text = line1 + line2 + line3 + line4
+
+    update.message.reply_text(text)
+
 # Log errors
 def error(update, context):
     logger.warning('Update %s caused error "%s"' % (update, context.error))
@@ -86,6 +96,7 @@ def main(BOT_KEY):
 
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
+    dp.add_handler(CommandHandler("carriers", carriers))
     dp.add_handler(CommandHandler("track", track))
     dp.add_handler(CommandHandler("track_history", track_history))
     dp.add_error_handler(error)
