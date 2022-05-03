@@ -40,7 +40,6 @@ self.package = {
 }
 """
 
-
 import requests
 
 class TrackInpostParcel(object):
