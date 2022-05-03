@@ -26,43 +26,49 @@ def error(update, context):
 
 # /track command
 def track(update, context):
-    if len(context.args) == 2:
+    if len(context.args) >= 2:
         tracking_number = context.args[0]
-        use_inpost_api = context.args[1].lower() == 'inpost'
-    elif len(context.args) < 2:
-        return update.message.reply_text('No tracking number/carrier provided.\nUse /track <tracking_number> <carrier>')        
-    else:
-        return update.message.reply_text('Too many arguments.')
+        carrier = ""
 
-    if use_inpost_api == False:
-        try:
-            tracker = TrackParcelPP(tracking_number)
-        except:
-            return update.message.reply_text("Could not find parcel %s " % tracking_number)
+        if len(context.args) == 2:
+            carrier = context.args[1]
+        else:
+            for i in range(1, len(context.args)-1):
+                carrier = carrier + context.args[i] + " "
     else:
-        try:
-            tracker = TrackInpostParcel(tracking_number)
-        except:
-            return update.message.reply_text("Could not find parcel %s" % tracking_number)
+        return update.message.reply_text('No tracking number/carrier provided.\nUse /track <tracking_number> <carrier>')        
+    
+    if "poczta" in carrier.lower() or "pp" in carrier.lower():
+        tracker = TrackParcelPP(tracking_number)
+    elif "inpost" in carrier.lower():
+        tracker = TrackInpostParcel(tracking_number)
+    else:
+        return update.message.reply_text("%s parcels are not supported" % carrier.capitalize())
         
     info = tracker.get_current_status()
     update.message.reply_text(info)
 
 # /track_history command
 def track_history(update, context):
-    if len(context.args) == 2:
+    if len(context.args) >= 2:
         tracking_number = context.args[0]
-        use_inpost_api = context.args[1].lower() == 'inpost'
-    elif len(context.args) < 2:
-        return update.message.reply_text('No tracking number/carrier provided.\nUse /track <tracking_number> <carrier>')        
+        carrier = ""
+
+        if len(context.args) == 2:
+            carrier = context.args[1]
+        else:
+            for i in range(1, len(context.args)-1):
+                carrier = carrier + context.args[i] + " "
     else:
-        return update.message.reply_text('Too many arguments.')
+        return update.message.reply_text('No tracking number/carrier provided.\nUse /track <tracking_number> <carrier>')        
     
-    if use_inpost_api == True:
+    if "poczta" in carrier.lower() or "pp" in carrier.lower():
+        tracker = TrackParcelPP(tracking_number)
+    elif "inpost" in carrier.lower():
         tracker = TrackInpostParcel(tracking_number)
     else:
-        tracker = TrackParcelPP(tracking_number)
-    
+        return update.message.reply_text("%s parcels are not supported" % carrier.capitalize())
+
     info = tracker.get_tracking_history()
     update.message.reply_text(info)
 

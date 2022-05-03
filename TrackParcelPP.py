@@ -88,7 +88,6 @@ class TrackParcelPP(object):
     
     def get_tracking_details(self, index):
         entry = self.parcel_info['danePrzesylki']['zdarzenia']['zdarzenie'][index]
-
         info = {
             'date': entry['czas'],
             'status': entry['nazwa']
