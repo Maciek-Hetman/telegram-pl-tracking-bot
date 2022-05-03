@@ -1,8 +1,6 @@
 #!/usr/local/bin/python3
 import logging
-from xdrlib import ConversionError
-from setuptools import Command
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
+from telegram.ext import Updater, CommandHandler
 from TrackInpostParcel import TrackInpostParcel
 from TrackParcel import TrackParcel
 from sys import argv as arg
