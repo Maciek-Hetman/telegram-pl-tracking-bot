@@ -86,9 +86,7 @@ class TrackInpostParcel(object):
             return self.format_status(item)
 
     def format_status(self, status):
-        text = status.split('_')
-        text[0] = text[0].capitalize()
-
+        text = status.capitalize().split('_')
         pretty_text = ""
 
         for word in text:
