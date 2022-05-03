@@ -39,18 +39,16 @@ def track(update, context):
             tracker = TrackParcelPP(tracking_number)
         except:
             return update.message.reply_text("Could not find parcel %s " % tracking_number)
-
-        info = tracker.get_current_status()
     else:
         try:
             tracker = TrackInpostParcel(tracking_number)
         except:
             return update.message.reply_text("Could not find parcel %s" % tracking_number)
         
-        info = tracker.get_current_status()
-    
+    info = tracker.get_current_status()
     update.message.reply_text(info)
 
+# /track_history command
 def track_history(update, context):
     if len(context.args) == 2:
         tracking_number = context.args[0]
@@ -62,8 +60,10 @@ def track_history(update, context):
     
     if use_inpost_api == True:
         tracker = TrackInpostParcel(tracking_number)
-        info = tracker.get_tracking_history()
+    else:
+        tracker = TrackParcelPP(tracking_number)
     
+    info = tracker.get_tracking_history()
     update.message.reply_text(info)
 
 def main(BOT_KEY):
