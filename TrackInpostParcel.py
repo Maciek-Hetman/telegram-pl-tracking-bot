@@ -104,14 +104,3 @@ class TrackInpostParcel(object):
 
         return pretty_text
     
-    def get_last_updated_datetime(self):
-        return self.format_datetime(self.package['updated_at'])
-
-    def get_creation_datetime(self):
-        return self.format_datetime(self.package['created_at'])
-
-    def get_service_type(self):                 # This could be locker or courier
-        return self.package['service'].capitalize()
-    
-    def getTargetLocation(self):                # That's for later
-        return self.package['custom_attributes']['target_machine_detail']
