@@ -41,6 +41,6 @@ class TrackParcel(object):
     def getSteps(self):
         return self.steps
     
-    def getDit(self): # Days in transit
+    def getDit(self):
         return self.dit
     
