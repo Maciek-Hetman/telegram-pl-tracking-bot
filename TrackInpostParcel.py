@@ -80,7 +80,7 @@ class TrackInpostParcel(object):
         return pretty_text
 
     def format_item(self, item):
-        if "T" in item:
+        if "T" in item and ":" in item and "-" in item:
             return self.format_datetime(item)
         else:
             return self.format_status(item)
@@ -95,13 +95,12 @@ class TrackInpostParcel(object):
         return pretty_text
 
     def format_datetime(self, datetime):
-        dt = datetime.split("T") # dt = ["2022-05-31", "21:37.000+2:00"]
+        dt = datetime.split("T")                # dt = ["2022-05-31", "21:37.000+2:00"]
         dt[1] = dt[1].split(".")[0]
 
         pretty_text = dt[1] + " " + dt[0]
 
         return pretty_text
-
     
     def get_last_updated_datetime(self):
         return self.format_datetime(self.package['updated_at'])
