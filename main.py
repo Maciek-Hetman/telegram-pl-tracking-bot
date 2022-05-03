@@ -31,8 +31,11 @@ def error(update, context):
     logger.warning('Update %s caused error "%s"' % (update, context.error))
 
 def track(update, context):
-    use_inpost_api = context.args[1].lower() == 'inpost'
-    tracking_number = context.args[0]
+    try:
+        tracking_number = context.args[0]
+        use_inpost_api = context.args[1].lower() == 'inpost'
+    except IndexError:
+        return update.message.reply_text('No tracking number/carrier provided\nUse /track <tracking_number> <carrier>')        
 
     if use_inpost_api == False:
         tracker = TrackParcel(tracking_number)
