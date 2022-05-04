@@ -1,4 +1,3 @@
-#!/usr/local/bin/python3
 import logging
 from telegram.ext import Updater, CommandHandler
 from TrackInpostParcel import TrackInpostParcel
@@ -10,9 +9,11 @@ logger = logging.getLogger(__name__)
 
 # Send message when /start command is issued
 def start(update, context):
-    text = "Hi!"
-
+    text = "Welcome! You can see status of your parcel with /track <tracking number> <carrier> command."
     update.message.reply_text(text)
+    carriers(update, context)
+    text2 = "Use /help to see all available commands"
+    update.message.reply_text(text2)
 
 # Send message when /help command is issued
 def help(update, context):
@@ -28,6 +29,7 @@ def help(update, context):
 
     update.message.reply_text(text)
 
+# List supported carriers
 def carriers(update, context):
     line1 = "Currently supported carriers:"
     line2 = "\n\t- Poczta Polska (you can short it to 'pp')"
