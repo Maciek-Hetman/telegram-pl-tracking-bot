@@ -4,6 +4,9 @@ from TrackInpostParcel import TrackInpostParcel
 from TrackParcelPP import TrackParcelPP
 from sys import argv as arg
 from time import sleep
+from threading import Thread
+
+UPDATE_INTERVAL = 3600             # How often bot will check for updates
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -180,6 +183,11 @@ def main(BOT_KEY):
     dp.add_handler(CommandHandler("track_history", track_history))
     dp.add_handler(CommandHandler("save", save))
     dp.add_error_handler(error)
+
+    # Starting daemon
+    ParcelDaemon = Thread(target=check_parcels_daemon(updater, parcels, UPDATE_INTERVAL))
+    ParcelDaemon.setDaemon(True)
+    ParcelDaemon.start()
 
     updater.start_polling()
 
