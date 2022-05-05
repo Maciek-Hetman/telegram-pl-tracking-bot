@@ -183,13 +183,14 @@ def main(BOT_KEY):
     dp.add_handler(CommandHandler("track_history", track_history))
     dp.add_handler(CommandHandler("save", save))
     dp.add_error_handler(error)
+    
+    updater.start_polling()
 
     # Starting daemon
     ParcelDaemon = Thread(target=check_parcels_daemon(updater, parcels, UPDATE_INTERVAL))
     ParcelDaemon.setDaemon(True)
     ParcelDaemon.start()
 
-    updater.start_polling()
 
 if __name__ == '__main__':
     main(arg[1])
