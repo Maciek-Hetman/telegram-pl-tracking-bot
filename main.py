@@ -3,9 +3,43 @@ from telegram.ext import Updater, CommandHandler
 from TrackInpostParcel import TrackInpostParcel
 from TrackParcelPP import TrackParcelPP
 from sys import argv as arg
+from time import sleep
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+"""
+This should look like that:
+parcels = {
+    '<user id>': {
+        '<tracking_number>': [<carrier>, </track_history output>],
+        ...
+    },
+    ...
+}
+Basically we check if track_history() output for given carrier and tracking number matches parcels['<user_id>']['<tracking_number>'][1]
+If not we sent message to user using updater.bot.sendMessage(chat_id='<user_id>', text='package update: <new track_history output>')
+Problem is when program stops running. Later on probably i'll make json file with it or sth
+"""
+parcels = {}
+
+def check_parcels_daemon(updater, parcels, update_interval):
+    for user_id in parcels:
+        for tracking_number in parcels[user_id]:
+            carrier = parcels[user_id][tracking_number][0]
+        
+        if "poczta" in carrier.lower() or "pp" in carrier.lower():
+            tracker = TrackParcelPP(tracking_number)
+        elif "inpost" in carrier.lower():
+            tracker = TrackInpostParcel(tracking_number)
+        
+        info = tracker.get_tracking_history()
+
+        if info != parcels[user_id][tracking_number][1]:
+            parcels[user_id][tracking_number][1] = info
+            updater.bot.sendMessage(chat_id=user_id, text="Package %s new status is:\n%s" % (tracking_number, tracker.get_current_status()))
+
+    sleep(update_interval)
 
 # Send message when /start command is issued
 def start(update, context):
@@ -48,6 +82,9 @@ def error(update, context):
 def track(update, context):
     if len(context.args) >= 2:
         tracking_number = context.args[0]
+
+        # Placeholder for checking parcels dict
+
         carrier = ""
 
         if len(context.args) == 2:
