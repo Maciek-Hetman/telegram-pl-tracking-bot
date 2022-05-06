@@ -7,8 +7,9 @@ from sys import argv as arg
 from time import sleep
 from threading import Thread
 
-UPDATE_INTERVAL = 3600             # How often bot will check for updates
+UPDATE_INTERVAL = 3600             # How often bot will check for updates (in seconds)
 
+# Logger config
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -44,6 +45,7 @@ def check_parcels_daemon(updater, parcels, update_interval):
             updater.bot.sendMessage(chat_id=user_id, text="Package %s new status is:\n%s" % (tracking_number, tracker.get_current_status()))
 
     sleep(update_interval)
+
 
 def create_tracker(carrier, tracking_number):
     if "poczta" in carrier.lower() or "pp" in carrier.lower():
@@ -203,4 +205,4 @@ if __name__ == '__main__':
     try:
         main(arg[1], arg[2])
     except IndexError:
-        print("No bot token given.\nUsage: python3 main.py <bot token> <dhl api key>")
+        logger.error("No bot token given.\nUsage: python3 main.py <bot token> <dhl api key>")
