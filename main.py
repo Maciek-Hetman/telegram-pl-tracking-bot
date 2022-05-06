@@ -32,7 +32,7 @@ def check_parcels_daemon(updater, parcels, update_interval):
             carrier = parcels[user_id][tracking_number][0]
         
         try:
-            carrier = check_carrier(carrier)
+            tracker = create_tracker(carrier, tracking_number)
         except UnboundLocalError:
             continue
         
@@ -44,7 +44,7 @@ def check_parcels_daemon(updater, parcels, update_interval):
 
     sleep(update_interval)
 
-def check_carrier(carrier):
+def create_tracker(carrier, tracking_number):
     if "poczta" in carrier.lower() or "pp" in carrier.lower():
         return TrackParcelPP(tracking_number)
     elif "inpost" in carrier.lower():
@@ -107,7 +107,7 @@ def save(update, context):
         return update.message.reply_text('No tracking number/carrier provided.\nUse /track <tracking_number> <carrier>')        
     
     try:
-        tracker = check_carrier(carrier)
+        tracker = create_tracker(carrier, tracking_number)
     except UnboundLocalError:
         return update.message.reply_text("Carrier %s is not supported." % carrier)
 
@@ -144,12 +144,10 @@ def track(update, context):
     else:
         return update.message.reply_text('No tracking number/carrier provided.\nUse /track <tracking_number> <carrier>')        
     
-    if "poczta" in carrier.lower() or "pp" in carrier.lower():
-        tracker = TrackParcelPP(tracking_number)
-    elif "inpost" in carrier.lower():
-        tracker = TrackInpostParcel(tracking_number)
-    else:
-        return update.message.reply_text("%s parcels are not supported" % carrier.capitalize())
+    try:
+        tracker = create_tracker(carrier, tracking_number)
+    except UnboundLocalError:
+        return update.message.reply_text("Carrier %s is not supported." % carirer)
 
     info = tracker.get_current_status()
     update.message.reply_text(info)
@@ -169,7 +167,7 @@ def track_history(update, context):
         return update.message.reply_text('No tracking number/carrier provided.\nUse /track <tracking_number> <carrier>')        
     
     try:
-        tracker = check_carrier(carrier)
+        tracker = create_tracker(carrier, tracking_number)
     except UnboundLocalError:
         return update.message.reply_text("Carrier %s is not supported." % carrier)
 
