@@ -155,7 +155,7 @@ def status(update, context):
     try:
         tracker = create_tracker(carrier, tracking_number)
     except UnboundLocalError:
-        return update.message.reply_text("Carrier %s is not supported." % carirer)
+        return update.message.reply_text("Carrier %s is not supported." % carrier)
 
     info = tracker.get_current_status()
     update.message.reply_text(info)
