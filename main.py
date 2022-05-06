@@ -106,12 +106,10 @@ def save(update, context):
     else:
         return update.message.reply_text('No tracking number/carrier provided.\nUse /track <tracking_number> <carrier>')        
     
-    if "poczta" in carrier.lower() or "pp" in carrier.lower():
-        tracker = TrackParcelPP(tracking_number)
-    elif "inpost" in carrier.lower():
-        tracker = TrackInpostParcel(tracking_number)
-    else:
-        return update.message.reply_text("%s parcels are not supported" % carrier.capitalize())
+    try:
+        tracker = check_carrier(carrier)
+    except UnboundLocalError:
+        return update.message.reply_text("Carrier %s is not supported." % carrier)
 
     info = tracker.get_current_status()
 
@@ -170,12 +168,10 @@ def track_history(update, context):
     else:
         return update.message.reply_text('No tracking number/carrier provided.\nUse /track <tracking_number> <carrier>')        
     
-    if "poczta" in carrier.lower() or "pp" in carrier.lower():
-        tracker = TrackParcelPP(tracking_number)
-    elif "inpost" in carrier.lower():
-        tracker = TrackInpostParcel(tracking_number)
-    else:
-        return update.message.reply_text("%s parcels are not supported" % carrier.capitalize())
+    try:
+        tracker = check_carrier(carrier)
+    except UnboundLocalError:
+        return update.message.reply_text("Carrier %s is not supported." % carrier)
 
     info = tracker.get_tracking_history()
     update.message.reply_text(info)
