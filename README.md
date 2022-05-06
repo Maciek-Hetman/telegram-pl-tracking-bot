@@ -10,7 +10,8 @@ Currently supported carriers:
     - DHL*
 
 ## DHL Tracking (if you want to self host this bot)
-For tracking DHL packages you need to create account in DHL API Developer Portal to obtain API Key
+For tracking DHL packages you need to create account in DHL API Developer Portal to obtain API Key.
+Bot will work without it, but DHL tracking will be disabled.
 
 ## Usage
 Project is still in heavy development.  
