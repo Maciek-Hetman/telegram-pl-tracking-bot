@@ -7,6 +7,10 @@ For now you can only check parcel status and history via commands.
 Currently supported carriers:  
     - InPost  
     - Poczta Polska 
+    - DHL*
+
+## DHL Tracking (if you want to self host this bot)
+For tracking DHL packages you need to create account in DHL API Developer Portal to obtain API Key
 
 ## Usage
 Project is still in heavy development.  
@@ -21,7 +25,7 @@ You can self host your own instance of this bot.
 First you need to create your bot with BotFather (use Google or even better DuckDuckGo or SearX if you don't know how to do it).    
 Now let's install dependencies:  
 ```pip install requests zeep python_telegram_bot```  
-```python main.py <token>``` 
+```python main.py <token> <dhl api key>``` 
 Replace ```<token>``` with your bot token mentioned earlier and you're done.  
   
 Note: You might have to use ```pip3``` and ```python3``` command instead of ```pip``` and ```python``` if python2 is still
