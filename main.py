@@ -2,6 +2,7 @@ import logging
 from telegram.ext import Updater, CommandHandler
 from TrackInpostParcel import TrackInpostParcel
 from TrackParcelPP import TrackParcelPP
+from TrackDHLParcel import TrackDHLParcel
 from sys import argv as arg
 from time import sleep
 from threading import Thread
@@ -49,6 +50,8 @@ def create_tracker(carrier, tracking_number):
         return TrackParcelPP(tracking_number)
     elif "inpost" in carrier.lower():
         return TrackInpostParcel(tracking_number)
+    elif "dhl" in carrier.lower():
+        return TrackDHLParcel(tracking_number)
     else:
         raise UnboundLocalError("Carrier not supported")
 
@@ -176,7 +179,7 @@ def track_history(update, context):
     update.message.reply_text(info)
 
 
-def main(BOT_KEY):
+def main(BOT_KEY, DHL_API_KEY):
     updater = Updater(BOT_KEY, use_context=True)
     dp = updater.dispatcher
 
@@ -198,6 +201,6 @@ def main(BOT_KEY):
 
 if __name__ == '__main__':
     try:
-        main(arg[1])
+        main(arg[1], arg[2])
     except IndexError:
-        print("No bot token given.\nUsage: python3 main.py <bot token>")
+        print("No bot token given.\nUsage: python3 main.py <bot token> <dhl api key>")
