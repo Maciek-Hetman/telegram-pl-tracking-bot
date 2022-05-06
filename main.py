@@ -197,4 +197,7 @@ def main(BOT_KEY):
 
 
 if __name__ == '__main__':
-    main(arg[1])
+    try:
+        main(arg[1])
+    except IndexError:
+        print("No bot token given.\nUsage: python3 main.py <bot token>")
