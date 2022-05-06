@@ -1,5 +1,3 @@
-import requests
-
 """
 self.req = {
     'shipments': [
@@ -43,30 +41,49 @@ self.req = {
 }
 """
 
+import http.client
+import urllib.parse
+import json
+
 class TrackDHLParcel(object):
     BASE_URL = "https://api-eu.dhl.com/track/shipments"
     
     def __init__(self, tracking_number, api_key):
-        header = {'DHL-API-Key': api_key}
-        req_url = self.BASE_URL + "?trackingNumber=" + tracking_number
-        
-        self.parcel = requests.get(req_url, headers=header).json()
+        params = urllib.parse.urlencode({
+            'trackingNumber': tracking_number.strip(),
+        })
+        headers = {
+            'Accept': 'application/json',
+            'DHL-API-Key': api_key
+        }
+
+        connection = http.client.HTTPSConnection("api-eu.dhl.com")
+        connection.request("GET", "/track/shipments?" + params, "", headers)
+
+        response = connection.getresponse()
+        self.parcel = json.loads(response.read())
+
+        connection.close()
+
     
     def get_tracking_details(self, index):
-        return self.parcel['shipments']['events'][index]['description']
+        return self.parcel['shipments'][0]['events'][index]['description']
 
     def get_current_status(self):
-        return self.parcel['shipments']['status']['description']
+        return self.parcel['shipments'][0]['status']['description']
     
     def get_tracking_history(self):
         history = []
 
-        for i in range(0, len(self.parcel['shipments']['events'])-1):
-            history.append(self.get_tracking_details(i))
-        
-        pretty_text = ""
+        if len(self.parcel['shipments'][0]['events']) == 1:
+            return self.get_current_status()
+        else:
+            for i in range(0, len(self.parcel['shipments'][0]['events'])-1):
+                history.append(self.get_tracking_details(i))
+            
+            pretty_text = ""
 
-        for entry in history:
-            pretty_text = pretty_text + entry['description'] + "\n"
-        
-        return pretty_text
+            for entry in history:
+                pretty_text = pretty_text + entry['description'] + "\n"
+            
+            return pretty_text

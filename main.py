@@ -9,7 +9,11 @@ from threading import Thread
 
 UPDATE_INTERVAL = 3600             # How often bot will check for updates (in seconds)
 ENABLE_DHL_TRACKING = True
-DHL_API_KEY = None
+
+try:
+    DHL_API_KEY = arg[2]
+except IndexError:
+    DHL_API_KEY = None
 
 # Logger config
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -54,8 +58,11 @@ def create_tracker(carrier, tracking_number):
         return TrackParcelPP(tracking_number)
     elif "inpost" in carrier.lower():
         return TrackInpostParcel(tracking_number)
-    elif DHL_API_KEY != None and "dhl" in carrier.lower():
-        return TrackDHLParcel(tracking_number, DHL_API_KEY)
+    elif "dhl" in carrier.lower():
+        if DHL_API_KEY == None:
+            raise UnboundLocalError("Carrier not supported")
+        else:
+            return TrackDHLParcel(tracking_number, DHL_API_KEY)
     else:
         raise UnboundLocalError("Carrier not supported")
 
@@ -141,7 +148,6 @@ def status(update, context):
     if len(context.args) >= 2:
         tracking_number = context.args[0]
 
-
         carrier = ""
 
         if len(context.args) == 2:
@@ -183,10 +189,7 @@ def track_history(update, context):
     update.message.reply_text(info)
 
 
-def main(BOT_KEY, dhl_api_key=None):
-    if dhl_api_key != None:
-        DHL_API_KEY = dhl_api_key
-
+def main(BOT_KEY):
     updater = Updater(BOT_KEY, use_context=True)
     dp = updater.dispatcher
 
@@ -212,7 +215,7 @@ def main(BOT_KEY, dhl_api_key=None):
 if __name__ == '__main__':
     try:
         if len(arg) > 2:
-            main(arg[1], arg[2])
+            main(arg[1])
         else:
             logger.log(20, "DHL tracking is disabled")
             main(arg[1])   
