@@ -45,7 +45,7 @@ def check_parcels_daemon(updater, parcels, update_interval):
     sleep(update_interval)
 
 def check_carrier(carrier):
-     if "poczta" in carrier.lower() or "pp" in carrier.lower():
+    if "poczta" in carrier.lower() or "pp" in carrier.lower():
         return TrackParcelPP(tracking_number)
     elif "inpost" in carrier.lower():
         return TrackInpostParcel(tracking_number)
