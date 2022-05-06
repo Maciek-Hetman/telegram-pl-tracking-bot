@@ -190,6 +190,9 @@ def main(BOT_KEY, dhl_api_key=None):
     updater = Updater(BOT_KEY, use_context=True)
     dp = updater.dispatcher
 
+    logger.log(20, "DHL API key: %s" % DHL_API_KEY)
+    logger.log(20, "Telegram bot key: %s" % BOT_KEY)
+
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("carriers", carriers))
