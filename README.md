@@ -6,7 +6,7 @@ For now you can only check parcel status and history via commands.
   
 Currently supported carriers:  
     - InPost  
-    - Poczta Polska 
+    - Poczta Polska  
     - DHL*
 
 ## DHL Tracking (if you want to self host this bot)
