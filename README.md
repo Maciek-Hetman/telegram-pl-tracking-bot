@@ -9,14 +9,14 @@ Currently supported carriers:
     - Poczta Polska  
     - DHL*
 
-## DHL Tracking (if you want to self host this bot)
+### DHL Tracking (if you want to self host this bot)
 For tracking DHL packages you need to create account in DHL API Developer Portal to obtain API Key.
 Bot will work without it, but DHL tracking will be disabled.
 
 ## Usage
 Project is still in heavy development.  
 Currently available commands:  
-/track (tracking number) (carrier)  
+/status (tracking number) (carrier)  
 /track_history (tracking number) (carrier)
 /help
 /carriers
@@ -28,7 +28,8 @@ Now let's install dependencies:
 ```pip install requests zeep python_telegram_bot```  
 ```python main.py <token> <dhl api key>``` 
 Replace ```<token>``` with your bot token mentioned earlier and you're done.  
-  
+For dhl api key see DHL section
+
 Note: You might have to use ```pip3``` and ```python3``` command instead of ```pip``` and ```python``` if python2 is still
 default on your system (you can check it with ```python --version```). Most Linux distros
 use python3 as default interpreter (so ```python --version``` should say it is 3.x.x), but MacOS
