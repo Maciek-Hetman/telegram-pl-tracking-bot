@@ -52,21 +52,21 @@ def create_tracker(carrier, tracking_number):
     else:
         raise UnboundLocalError("Carrier not supported")
 
-# Send message when /start command is issued
+
 def start(update, context):
-    text = "Welcome! You can see status of your parcel with /track <tracking number> <carrier> command."
+    text = "Welcome! You can see status of your parcel with /status <tracking number> <carrier> command."
     update.message.reply_text(text)
     carriers(update, context)
     text2 = "Use /help to see all available commands"
     update.message.reply_text(text2)
 
-# Send message when /help command is issued
+
 def help(update, context):
     # Don't look at this
     line1 = "/start - see welcome message"
     line2 = "\n/help - see this message"
     line3 = "\n/carriers - list supported carriers"
-    line4 = "\n/track <tracking number> <carrier> - see current parcel status"
+    line4 = "\n/status <tracking number> <carrier> - see current parcel status"
     line5 = "\n/track_history <tracking_number> <carrier> - see history of parcel"
 
     # Nothing to see here
@@ -74,7 +74,7 @@ def help(update, context):
 
     update.message.reply_text(text)
 
-# List supported carriers
+
 def carriers(update, context):
     line1 = "Currently supported carriers:"
     line2 = "\n\t- Poczta Polska (you can short it to 'pp')"
@@ -85,9 +85,10 @@ def carriers(update, context):
 
     update.message.reply_text(text)
 
-# Log errors
+
 def error(update, context):
     logger.warning('Update %s caused error "%s"' % (update, context.error))
+
 
 def save(update, context):
     user_id = update.message.from_user['id']
@@ -104,7 +105,7 @@ def save(update, context):
             for i in range(1, len(context.args)-1):
                 carrier = carrier + context.args[i] + " "
     else:
-        return update.message.reply_text('No tracking number/carrier provided.\nUse /track <tracking_number> <carrier>')        
+        return update.message.reply_text('No tracking number/carrier provided.\nUse /status <tracking_number> <carrier>')        
     
     try:
         tracker = create_tracker(carrier, tracking_number)
@@ -128,8 +129,8 @@ def save(update, context):
     
     update.message.reply_text("Parcel info saved")
 
-# /track command
-def track(update, context):
+
+def status(update, context):
     if len(context.args) >= 2:
         tracking_number = context.args[0]
 
@@ -142,7 +143,7 @@ def track(update, context):
             for i in range(1, len(context.args)-1):
                 carrier = carrier + context.args[i] + " "
     else:
-        return update.message.reply_text('No tracking number/carrier provided.\nUse /track <tracking_number> <carrier>')        
+        return update.message.reply_text('No tracking number/carrier provided.\nUse /status <tracking_number> <carrier>')        
     
     try:
         tracker = create_tracker(carrier, tracking_number)
@@ -152,7 +153,7 @@ def track(update, context):
     info = tracker.get_current_status()
     update.message.reply_text(info)
 
-# /track_history command
+
 def track_history(update, context):
     if len(context.args) >= 2:
         tracking_number = context.args[0]
@@ -164,7 +165,7 @@ def track_history(update, context):
             for i in range(1, len(context.args)-1):
                 carrier = carrier + context.args[i] + " "
     else:
-        return update.message.reply_text('No tracking number/carrier provided.\nUse /track <tracking_number> <carrier>')        
+        return update.message.reply_text('No tracking number/carrier provided.\nUse /status <tracking_number> <carrier>')        
     
     try:
         tracker = create_tracker(carrier, tracking_number)
@@ -174,6 +175,7 @@ def track_history(update, context):
     info = tracker.get_tracking_history()
     update.message.reply_text(info)
 
+
 def main(BOT_KEY):
     updater = Updater(BOT_KEY, use_context=True)
     dp = updater.dispatcher
@@ -181,7 +183,7 @@ def main(BOT_KEY):
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("carriers", carriers))
-    dp.add_handler(CommandHandler("track", track))
+    dp.add_handler(CommandHandler("status", status))
     dp.add_handler(CommandHandler("track_history", track_history))
     dp.add_handler(CommandHandler("save", save))
     dp.add_error_handler(error)
