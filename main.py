@@ -31,10 +31,10 @@ def check_parcels_daemon(updater, parcels, update_interval):
         for tracking_number in parcels[user_id]:
             carrier = parcels[user_id][tracking_number][0]
         
-        if "poczta" in carrier.lower() or "pp" in carrier.lower():
-            tracker = TrackParcelPP(tracking_number)
-        elif "inpost" in carrier.lower():
-            tracker = TrackInpostParcel(tracking_number)
+        try:
+            carrier = check_carrier(carrier)
+        except UnboundLocalError:
+            continue
         
         info = tracker.get_tracking_history()
 
@@ -43,6 +43,14 @@ def check_parcels_daemon(updater, parcels, update_interval):
             updater.bot.sendMessage(chat_id=user_id, text="Package %s new status is:\n%s" % (tracking_number, tracker.get_current_status()))
 
     sleep(update_interval)
+
+def check_carrier(carrier):
+     if "poczta" in carrier.lower() or "pp" in carrier.lower():
+        return TrackParcelPP(tracking_number)
+    elif "inpost" in carrier.lower():
+        return TrackInpostParcel(tracking_number)
+    else:
+        raise UnboundLocalError("Carrier not supported")
 
 # Send message when /start command is issued
 def start(update, context):
