@@ -211,7 +211,7 @@ if __name__ == '__main__':
         if len(arg) > 2:
             main(arg[1], arg[2])
         else:
-            logger.log("DHL tracking is disabled")
+            logger.log(20, "DHL tracking is disabled")
             main(arg[1])   
     except IndexError:
         logger.error("No bot token given.\nUsage: python3 main.py <bot token> <dhl api key>")
