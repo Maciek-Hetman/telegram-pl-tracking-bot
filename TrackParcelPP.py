@@ -1,5 +1,5 @@
 """
-self.parcel_info = {
+self.parcel = {
     'danePrzesylki': {                                  # Parcel info
         'dataNadania': <datetime.date object>           # Creation time
         'format': <None, or idk>
@@ -84,10 +84,10 @@ from zeep.wsse.username import UsernameToken
 class TrackParcelPP(object):
     def __init__(self, tracking_number):
         self.client = Client('https://tt.poczta-polska.pl/Sledzenie/services/Sledzenie?wsdl', wsse=UsernameToken('sledzeniepp', 'PPSA'))
-        self.parcel_info = self.client.service.sprawdzPrzesylke(str(tracking_number))
+        self.parcel = self.client.service.sprawdzPrzesylke(str(tracking_number))
     
     def get_tracking_details(self, index):
-        entry = self.parcel_info['danePrzesylki']['zdarzenia']['zdarzenie'][index]
+        entry = self.parcel['danePrzesylki']['zdarzenia']['zdarzenie'][index]
         info = {
             'date': entry['czas'],
             'status': entry['nazwa']
@@ -96,12 +96,12 @@ class TrackParcelPP(object):
         return info
 
     def get_current_status(self):
-        return self.parcel_info['danePrzesylki']['zdarzenia']['zdarzenie'][0]['nazwa']
+        return self.parcel['danePrzesylki']['zdarzenia']['zdarzenie'][0]['nazwa']
     
     def get_tracking_history(self):
         history = []
 
-        for i in range(0, len(self.parcel_info['danePrzesylki']['zdarzenia']['zdarzenie'])-1):
+        for i in range(0, len(self.parcel['danePrzesylki']['zdarzenia']['zdarzenie'])-1):
             history.append(self.get_tracking_details(i))
         
         pretty_text = ""
