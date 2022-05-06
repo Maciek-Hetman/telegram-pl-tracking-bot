@@ -1,6 +1,6 @@
 """
-self.package for locker
-self.package = {
+self.parcel for locker
+self.parcel = {
     'tracking_number': '<number>'
     'service': 'inpost_locker_standard'
     'type': 'inpost_locker_standard'
@@ -28,7 +28,7 @@ self.package = {
     'tracking_details': [ 
         # That's list of entrys sorted from newest at index 0 to oldest
         {
-            'status': '<package status>'
+            'status': '<parcel status>'
             'origin_status': '<idk what is this>'
             'agency': <idk>
             'datetime': '<time>'
@@ -44,15 +44,15 @@ import requests
 
 class TrackInpostParcel(object):
     def __init__(self, tracking_number):
-        self.package = requests.get("https://api-shipx-pl.easypack24.net/v1/tracking/%s" % tracking_number).json()
+        self.parcel = requests.get("https://api-shipx-pl.easypack24.net/v1/tracking/%s" % tracking_number).json()
         
         try:
-            self.package['tracking_details']
+            self.parcel['tracking_details']
         except KeyError:
-            raise ("Could not find package %s" % tracking_number)
+            raise ("Could not find parcel %s" % tracking_number)
 
     def get_tracking_details(self, index):
-        entry = self.package['tracking_details'][index]
+        entry = self.parcel['tracking_details'][index]
         info = {
             'date': entry['datetime'],
             'status': entry['status']
@@ -61,15 +61,15 @@ class TrackInpostParcel(object):
         return info
 
     def get_current_status(self):
-        status = self.package['tracking_details'][0]['status']
+        status = self.parcel['tracking_details'][0]['status']
 
         return self.format_status(status)
         
     def get_tracking_history(self):
         history = []
 
-        for i in range(0, len(self.package['tracking_details'])-1):
-            history.append(self.get_tracking_details(len(self.package['tracking_details']) - i - 1))
+        for i in range(0, len(self.parcel['tracking_details'])-1):
+            history.append(self.get_tracking_details(len(self.parcel['tracking_details']) - i - 1))
         
         pretty_text = ""
 
