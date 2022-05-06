@@ -208,6 +208,10 @@ def main(BOT_KEY, dhl_api_key=None):
 
 if __name__ == '__main__':
     try:
-        main(arg[1], arg[2])
+        if len(arg) > 2:
+            main(arg[1], arg[2])
+        else:
+            logger.log("DHL tracking is disabled")
+            main(arg[1])   
     except IndexError:
         logger.error("No bot token given.\nUsage: python3 main.py <bot token> <dhl api key>")
