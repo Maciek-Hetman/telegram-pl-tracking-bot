@@ -43,22 +43,22 @@ except FileNotFoundError:
 
 
 def check_parcels_daemon(updater, parcels, update_interval):
-    for user_id in parcels:
-        for tracking_number in parcels[user_id]:
-            carrier = parcels[user_id][tracking_number][0]
-        
-        try:
-            tracker = create_tracker(carrier, tracking_number)
-        except UnboundLocalError:
-            continue
-        
-        info = tracker.get_tracking_history()
+    while True:
+        for user_id in parcels:
+            for tracking_number in parcels[user_id]:
+                carrier = parcels[user_id][tracking_number][0]
 
-        if info != parcels[user_id][tracking_number][1]:
-            parcels[user_id][tracking_number][1] = info
-            updater.bot.sendMessage(chat_id=user_id, text="Package %s new status is:\n%s" % (tracking_number, tracker.get_current_status()))
+            try:
+                tracker = create_tracker(carrier, tracking_number)
+            except UnboundLocalError:
+                continue
 
-    sleep(update_interval)
+            info = tracker.get_tracking_history()
+
+            if info != parcels[user_id][tracking_number][1]:
+                parcels[user_id][tracking_number][1] = info
+                updater.bot.sendMessage(chat_id=user_id, text="Package %s new status is:\n%s" % (tracking_number, tracker.get_current_status()))
+
         with open("parcels.json", 'w') as f:
             json.dump(parcels, f)
 
