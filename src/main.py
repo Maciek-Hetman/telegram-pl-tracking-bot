@@ -21,7 +21,6 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 """
-This should look like that:
 parcels = {
     '<user id>': {
         '<tracking_number>': [<carrier>, </track_history output>],
@@ -29,13 +28,10 @@ parcels = {
     },
     ...
 }
-Basically we check if track_history() output for given carrier and tracking number matches parcels['<user_id>']['<tracking_number>'][1]
-If not we sent message to user using updater.bot.sendMessage(chat_id='<user_id>', text='package update: <new track_history output>')
-Problem is when program stops running. Later on probably i'll make json file with it or sth
 """
 
 try:
-    with open("parcels.json" , 'r') as f:
+    with open("parcels.json", 'r') as f:
         parcels = json.load(f)
 except FileNotFoundError:
     parcels = {}
@@ -64,7 +60,8 @@ def check_parcels_daemon(updater, parcels, update_interval):
 
         logger.log(20, "Parcels updated")
 
-        sleep(1)
+        # sleep(update_interval)
+        sleep(5)        # Remember to change it later
 
 
 def create_tracker(carrier, tracking_number):
@@ -132,8 +129,8 @@ def save(update, context):
             for i in range(1, len(context.args)-1):
                 carrier = carrier + context.args[i] + " "
     else:
-        return update.message.reply_text('No tracking number/carrier provided.\nUse /status <tracking_number> <carrier>')        
-    
+        return update.message.reply_text('No tracking number/carrier provided.\nUse /status <tracking_number> <carrier>')
+
     try:
         tracker = create_tracker(carrier, tracking_number)
     except UnboundLocalError:
