@@ -34,6 +34,7 @@ Problem is when program stops running. Later on probably i'll make json file wit
 """
 parcels = {}
 
+
 def check_parcels_daemon(updater, parcels, update_interval):
     for user_id in parcels:
         for tracking_number in parcels[user_id]:
@@ -110,7 +111,6 @@ def save(update, context):
     if len(context.args) >= 2:
         tracking_number = context.args[0]
 
-
         carrier = ""
 
         if len(context.args) == 2:
@@ -126,8 +126,6 @@ def save(update, context):
     except UnboundLocalError:
         return update.message.reply_text("Carrier %s is not supported." % carrier)
 
-    info = tracker.get_current_status()
-
     if user_id in parcels:
         if tracking_number in parcels[user_id]:
             try:
@@ -142,6 +140,7 @@ def save(update, context):
         parcels[user_id] = {tracking_number: [carrier, tracker.get_tracking_history()]}
     
     update.message.reply_text("Parcel info saved")
+    update.message.reply_text(tracker.get_current_status())
 
 
 def status(update, context):
@@ -163,8 +162,7 @@ def status(update, context):
     except UnboundLocalError:
         return update.message.reply_text("Carrier %s is not supported." % carrier)
 
-    info = tracker.get_current_status()
-    update.message.reply_text(info)
+    update.message.reply_text(tracker.get_current_status())
 
 
 def track_history(update, context):

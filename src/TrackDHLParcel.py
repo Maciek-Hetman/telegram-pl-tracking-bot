@@ -30,7 +30,7 @@ self.req = {
             },
             'events': [
                 {
-                    'descritpion': '<shipment status>'      # Wtf no timestamp?
+                    'description': '<shipment status>'      # Wtf no timestamp?
                 },
                 {
                     'description': <>
@@ -44,6 +44,7 @@ self.req = {
 import http.client
 import urllib.parse
 import json
+
 
 class TrackDHLParcel(object):
     BASE_URL = "https://api-eu.dhl.com/track/shipments"
@@ -65,13 +66,12 @@ class TrackDHLParcel(object):
 
         connection.close()
 
-    
     def get_tracking_details(self, index):
         return self.parcel['shipments'][0]['events'][index]['description']
 
     def get_current_status(self):
-        return self.parcel['shipments'][0]['status']['description']
-    
+        return self.get_tracking_details(0)
+
     def get_tracking_history(self):
         history = []
 
@@ -84,6 +84,6 @@ class TrackDHLParcel(object):
             pretty_text = ""
 
             for entry in history:
-                pretty_text = pretty_text + entry['description'] + "\n"
+                pretty_text = pretty_text + entry + "\n"
             
             return pretty_text
