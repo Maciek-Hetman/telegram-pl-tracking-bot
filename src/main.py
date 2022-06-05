@@ -6,9 +6,10 @@ from TrackDHLParcel import TrackDHLParcel
 from sys import argv as arg
 from time import sleep
 from threading import Thread
+import json
 
-UPDATE_INTERVAL = 3600             # How often bot will check for updates (in seconds)
-ENABLE_DHL_TRACKING = True
+UPDATE_INTERVAL = 30             # How often bot will check for updates (in minutes)
+UPDATE_INTERVAL *= 60
 
 try:
     DHL_API_KEY = arg[2]
@@ -32,7 +33,13 @@ Basically we check if track_history() output for given carrier and tracking numb
 If not we sent message to user using updater.bot.sendMessage(chat_id='<user_id>', text='package update: <new track_history output>')
 Problem is when program stops running. Later on probably i'll make json file with it or sth
 """
-parcels = {}
+
+try:
+    with open("parcels.json" , 'r') as f:
+        parcels = json.load(f)
+except FileNotFoundError:
+    parcels = {}
+    open("parcels.json", 'a').close()
 
 
 def check_parcels_daemon(updater, parcels, update_interval):
@@ -52,6 +59,12 @@ def check_parcels_daemon(updater, parcels, update_interval):
             updater.bot.sendMessage(chat_id=user_id, text="Package %s new status is:\n%s" % (tracking_number, tracker.get_current_status()))
 
     sleep(update_interval)
+        with open("parcels.json", 'w') as f:
+            json.dump(parcels, f)
+
+        logger.log(20, "Parcels updated")
+
+        sleep(1)
 
 
 def create_tracker(carrier, tracking_number):
@@ -138,7 +151,9 @@ def save(update, context):
             parcels[user_id][tracking_number] = [carrier, tracker.get_tracking_history()]
     else:
         parcels[user_id] = {tracking_number: [carrier, tracker.get_tracking_history()]}
-    
+
+    logger.log(20, "Updated parcels info: \n%s" % parcels)
+
     update.message.reply_text("Parcel info saved")
     update.message.reply_text(tracker.get_current_status())
 
@@ -201,13 +216,13 @@ def main(BOT_KEY):
     dp.add_handler(CommandHandler("track_history", track_history))
     dp.add_handler(CommandHandler("save", save))
     dp.add_error_handler(error)
-    
+
     updater.start_polling()
 
     # Starting daemon
-    ParcelDaemon = Thread(target=check_parcels_daemon(updater, parcels, UPDATE_INTERVAL))
-    ParcelDaemon.setDaemon(True)
-    ParcelDaemon.start()
+    parcelDaemon = Thread(target=check_parcels_daemon(updater, parcels, UPDATE_INTERVAL))
+    parcelDaemon.setDaemon(True)
+    parcelDaemon.start()
 
 
 if __name__ == '__main__':
