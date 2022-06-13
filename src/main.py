@@ -8,36 +8,6 @@ from time import sleep
 from threading import Thread
 import json
 
-UPDATE_INTERVAL = 30             # How often bot will check for updates (in minutes)
-UPDATE_INTERVAL *= 60
-
-try:
-    DHL_API_KEY = arg[2]
-except IndexError:
-    DHL_API_KEY = None
-
-# Logger config
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-"""
-parcels = {
-    '<user id>': {
-        '<tracking_number>': [<carrier>, </track_history output>],
-        ...
-    },
-    ...
-}
-"""
-
-try:
-    with open("parcels.json", 'r') as f:
-        parcels = json.load(f)
-except FileNotFoundError:
-    parcels = {}
-    open("parcels.json", 'a').close()
-
-
 def check_parcels_daemon(updater, parcels, update_interval):
     while True:
         for user_id in parcels:
@@ -223,6 +193,36 @@ def main(BOT_KEY):
 
 
 if __name__ == '__main__':
+    UPDATE_INTERVAL = 30             # How often bot will check for updates (in minutes)
+    UPDATE_INTERVAL *= 60
+
+    try:
+        DHL_API_KEY = arg[2]
+    except IndexError:
+        DHL_API_KEY = None
+
+    # Logger config
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+    logger = logging.getLogger(__name__)
+
+    """
+    parcels = {
+        '<user id>': {
+            '<tracking_number>': [<carrier>, </track_history output>],
+            ...
+        },
+        ...
+    }
+    """
+
+    try:
+        with open("parcels.json", 'r') as f:
+            parcels = json.load(f)
+    except FileNotFoundError:
+        parcels = {}
+        open("parcels.json", 'a').close()
+
+
     try:
         if len(arg) > 2:
             main(arg[1])
