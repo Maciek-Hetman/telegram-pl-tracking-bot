@@ -31,8 +31,7 @@ def check_parcels_daemon(updater, parcels, update_interval):
 
             logger.log(20, "Parcels updated")
 
-            # sleep(update_interval)
-            sleep(5)        # Remember to change it later
+            sleep(update_interval)
 
 
 def create_tracker(carrier, tracking_number):
