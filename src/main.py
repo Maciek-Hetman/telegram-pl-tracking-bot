@@ -109,12 +109,8 @@ def save(update, context):
 
     if user_id in parcels:
         if tracking_number in parcels[user_id]:
-            try:
-                parcels[user_id][tracking_number][0] = carrier
-                parcels[user_id][tracking_number][1] = tracker.get_tracking_history()
-            except IndexError:
-                parcels[user_id][tracking_number] = [carrier, tracker.get_tracking_history()]
-        
+            update.message.reply_text("Parcel already exists")
+            return
         else:
             parcels[user_id][tracking_number] = [carrier, tracker.get_tracking_history()]
     else:
@@ -123,7 +119,7 @@ def save(update, context):
     logger.log(20, "Updated parcels info: \n%s" % parcels)
 
     update.message.reply_text("Parcel info saved")
-    update.message.reply_text(tracker.get_current_status())
+    update.message.reply_text("Current parcel status:\n" + tracker.get_current_status())
 
 
 def status(update, context):
@@ -219,6 +215,7 @@ if __name__ == '__main__':
     try:
         with open("parcels.json", 'r') as f:
             parcels = json.load(f)
+            logger.log(20, "Parcels:\n%s" % parcels)
     except FileNotFoundError:
         parcels = {}
         open("parcels.json", 'a').close()
