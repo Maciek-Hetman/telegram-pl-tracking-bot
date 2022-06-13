@@ -1,4 +1,5 @@
 import logging
+import json
 from telegram.ext import Updater, CommandHandler
 from TrackInpostParcel import TrackInpostParcel
 from TrackParcelPP import TrackParcelPP
@@ -6,7 +7,6 @@ from TrackDHLParcel import TrackDHLParcel
 from sys import argv as arg
 from time import sleep
 from threading import Thread
-import json
 
 def check_parcels_daemon(updater, parcels, update_interval):
     while True:
@@ -32,6 +32,9 @@ def check_parcels_daemon(updater, parcels, update_interval):
             logger.log(20, "Parcels updated")
 
             sleep(update_interval)
+        
+        else:
+            logger.log(20, "Parcels not updated - there are no parcels")
 
 
 def create_tracker(carrier, tracking_number):
