@@ -12,6 +12,10 @@ Currently supported carriers:
 For tracking DHL packages you need to create account in DHL API Developer Portal to obtain API Key.
 Bot will work without it, but DHL tracking will be disabled.
 
+## Bot profile
+At the moment there is profile @TeleTrackingBot but I use it for testing and rarely host it for longer than 
+10 minutes. I'll update this section when I get VPS to host the bot.
+
 ## Usage
 Project is still in heavy development.  
 Currently available commands:  
