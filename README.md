@@ -18,7 +18,7 @@ Project is still in heavy development.
 Currently available commands:  
 ```/start```  
 ```/help```  
-```/carriers``` 
+```/carriers```  
 ```/status (tracking number) (carrier)```  
 ```/track_history (tracking number) (carrier)```  
 
@@ -47,4 +47,4 @@ still uses python2 as default interpreter.
 - [ ] Test reliability in real long term usage  
 - [ ] Add more international carriers*  
 
-* - not sure about it
+```*``` - not sure about it
