@@ -16,10 +16,11 @@ Bot will work without it, but DHL tracking will be disabled.
 ## Usage
 Project is still in heavy development.  
 Currently available commands:  
-/status (tracking number) (carrier)  
-/track_history (tracking number) (carrier)
-/help
-/carriers
+```/start```  
+```/help```  
+```/carriers``` 
+```/status (tracking number) (carrier)```  
+```/track_history (tracking number) (carrier)```  
 
 ## Self-hosting
 You can self host your own instance of this bot.  
@@ -34,3 +35,16 @@ Note: You might have to use ```pip3``` and ```python3``` command instead of ```p
 default on your system (you can check it with ```python --version```). Most Linux distros
 use python3 as default interpreter (so ```python --version``` should say it is 3.x.x), but MacOS
 still uses python2 as default interpreter.    
+
+
+## Todo
+- [ ] Add DPD support  
+- [ ] Add UPS support  
+- [ ] Create official bot account:  
+    - [ ] Create profile picture for bot  
+    - [ ] Get VPS to host it  
+    - [ ] Advertise it*  
+- [ ] Test reliability in real long term usage  
+- [ ] Add more international carriers*  
+
+* - not sure about it
