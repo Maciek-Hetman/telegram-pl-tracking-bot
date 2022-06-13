@@ -10,28 +10,29 @@ import json
 
 def check_parcels_daemon(updater, parcels, update_interval):
     while True:
-        for user_id in parcels:
-            for tracking_number in parcels[user_id]:
-                carrier = parcels[user_id][tracking_number][0]
+        if len(parcels) > 0:
+            for user_id in parcels:
+                for tracking_number in parcels[user_id]:
+                    carrier = parcels[user_id][tracking_number][0]
 
-            try:
-                tracker = create_tracker(carrier, tracking_number)
-            except UnboundLocalError:
-                continue
+                try:
+                    tracker = create_tracker(carrier, tracking_number)
+                except UnboundLocalError:
+                    continue
 
-            info = tracker.get_tracking_history()
+                info = tracker.get_tracking_history()
 
-            if info != parcels[user_id][tracking_number][1]:
-                parcels[user_id][tracking_number][1] = info
-                updater.bot.sendMessage(chat_id=user_id, text="Package %s new status is:\n%s" % (tracking_number, tracker.get_current_status()))
+                if info != parcels[user_id][tracking_number][1]:
+                    parcels[user_id][tracking_number][1] = info
+                    updater.bot.sendMessage(chat_id=user_id, text="Package %s new status is:\n%s" % (tracking_number, tracker.get_current_status()))
 
-        with open("parcels.json", 'w') as f:
-            json.dump(parcels, f)
+            with open("parcels.json", 'w') as f:
+                json.dump(parcels, f)
 
-        logger.log(20, "Parcels updated")
+            logger.log(20, "Parcels updated")
 
-        # sleep(update_interval)
-        sleep(5)        # Remember to change it later
+            # sleep(update_interval)
+            sleep(5)        # Remember to change it later
 
 
 def create_tracker(carrier, tracking_number):
