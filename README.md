@@ -1,8 +1,7 @@
 # Telegram tracking bot
 This is telegram bot for tracking parcels in Poland.  
 It uses official APIs/webservices from carriers.  
-The goal is to have bot notyfying about parcel updates.  
-For now you can only check parcel status and history via commands.   
+The goal is to have bot notifying when your parcel tracking status changes.  
   
 Currently supported carriers:  
     - InPost  
