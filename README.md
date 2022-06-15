@@ -49,5 +49,10 @@ still uses python2 as default interpreter.
     - [ ] Advertise it*  
 - [ ] Test reliability in real long term usage  
 - [ ] Add more international carriers*  
+- [ ] Parcel names
+- [ ] Delete parcels
+- [ ] List saved parcels
+- [ ] Privacy policy
+- [ ] Check parcels status my name 
 
 ```*``` - not sure about it
