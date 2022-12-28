@@ -35,6 +35,7 @@ def check_parcels_daemon(updater, parcels, update_interval):
         
         else:
             logger.log(20, "Parcels not updated - there are no parcels")
+            sleep(update_interval)
 
 
 def create_tracker(carrier, tracking_number):

@@ -96,12 +96,12 @@ class TrackParcelPP(object):
         return info
 
     def get_current_status(self):
-        return self.parcel['danePrzesylki']['zdarzenia']['zdarzenie'][0]['nazwa']
+        return self.parcel['danePrzesylki']['zdarzenia']['zdarzenie'][len(self.parcel['danePrzesylki']['zdarzenia']['zdarzenie'])-1]['nazwa']
     
     def get_tracking_history(self):
         history = []
 
-        for i in range(0, len(self.parcel['danePrzesylki']['zdarzenia']['zdarzenie'])-1):
+        for i in range(0, len(self.parcel['danePrzesylki']['zdarzenia']['zdarzenie'])):
             history.append(self.get_tracking_details(i))
         
         pretty_text = ""
